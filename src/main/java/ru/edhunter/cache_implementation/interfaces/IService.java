@@ -12,7 +12,7 @@ import static ru.edhunter.cache_implementation.interfaces.annotation.Cache.Cache
  * Test interface with methods with cache
  */
 public interface IService {
-    @Cache(cacheType = FILE, fileNamePrefix = "data", zip, identityBy = {String.class}, listList = 5)
+    @Cache(cacheType = FILE, fileNamePrefix = "data", zip = false, identityBy = {String.class}, listList = 5)
     List run(final String item, double value, Date date);
 
     @Cache(cacheType = IN_MEMORY, listList = 5, zip = true, identityBy = {String.class}, fileNamePrefix = "asdaa", encrypt = true)
