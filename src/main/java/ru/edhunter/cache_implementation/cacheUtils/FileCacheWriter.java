@@ -36,7 +36,11 @@ public class FileCacheWriter {
                 fileOutputStream.write(output);
             }
 
-        } catch (IOException e) {
+        } catch (NotSerializableException e) {
+            throw new RuntimeException("results of cached method must be serializable ("+e.getMessage()+"), " +
+                    "use cache 'IN_MEMORY'", e);
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
         return offset;
