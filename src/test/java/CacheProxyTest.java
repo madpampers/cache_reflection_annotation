@@ -15,9 +15,9 @@ public class CacheProxyTest {
         IService cachedService = cacheProxy.cache(testService);
 
         long start = new Date().getTime();
-        System.out.println(cachedService.work("Vova", 0, new Date()).size());
+        System.out.println(cachedService.run("Vova", 0, new Date()).size());
         long firstResult = new Date().getTime();
-        System.out.println(cachedService.work("Vova", 0, new Date()).size());
+        System.out.println(cachedService.run("Vova", 0, new Date()).size());
         long secondResult = new Date().getTime();
         assertTrue(secondResult-firstResult<(firstResult-start)/10);
     }
@@ -28,9 +28,9 @@ public class CacheProxyTest {
         IService cachedService = cacheProxy.cache(testService);
 
         long start = new Date().getTime();
-        System.out.println(cachedService.run("Vova", 0, new Date()).size());
+        System.out.println(cachedService.work("Vova", 0, new Date()).size());
         long firstResult = new Date().getTime();
-        System.out.println(cachedService.run("Vova", 0, new Date()).size());
+        System.out.println(cachedService.work("Vova", 0, new Date()).size());
         long secondResult = new Date().getTime();
         assertTrue(secondResult-firstResult<(firstResult-start)/10);
     }
