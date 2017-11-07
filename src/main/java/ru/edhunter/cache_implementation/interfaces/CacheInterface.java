@@ -1,6 +1,6 @@
 package ru.edhunter.cache_implementation.interfaces;
 
-import java.util.UUID;
+import java.util.List;
 
 /**
  * Basic cache interface, with methods for manipulating with it. Current implementations:
@@ -8,29 +8,31 @@ import java.util.UUID;
  * @see ru.edhunter.cache_implementation.caches.FileCache
  * @see ru.edhunter.cache_implementation.caches.MemoryCache
  */
-public interface ICache {
+public interface CacheInterface {
 
     /**
      * Puts data on storage.
      *
-     * @param identity    unique identification of caching value.
+     * @param identity    unique identity of caching value.
      * @param returnValue value, that we cache.
      */
-    void putData(final UUID identity, final Object returnValue);
+    void putData(final List identity, final Object returnValue);
 
     /**
      * Gets data from cache by its identity.
      *
+     * @param identity unique identity of stored cache value
      * @return returns object from cache.
      */
-    Object getData(final UUID identity);
+    Object getData(final List identity);
 
     /**
      * Checks if value with provided identity present in cache.
      *
+     * @param identity unique identity of stored cache value
      * @return true if cache contains identity
      */
-    boolean contains(final UUID identity);
+    boolean contains(final List identity);
 
     /**
      * @return returns count of elements in cache

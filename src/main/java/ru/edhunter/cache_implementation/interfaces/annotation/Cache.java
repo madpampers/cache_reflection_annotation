@@ -1,5 +1,13 @@
 package ru.edhunter.cache_implementation.interfaces.annotation;
 
+import com.sun.org.glassfish.gmbal.InheritedAttributes;
+import com.sun.xml.internal.bind.annotation.OverrideAnnotationOf;
+import javafx.beans.DefaultProperty;
+import ru.edhunter.cache_implementation.interfaces.CachedService;
+
+import javax.annotation.processing.SupportedOptions;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -12,6 +20,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Retention(RUNTIME)
 @Target(METHOD)
+@Inherited
 
 public @interface Cache {
 

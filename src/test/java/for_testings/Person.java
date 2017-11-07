@@ -2,7 +2,7 @@ package for_testings;
 
 import java.io.Serializable;
 
-public class Person{
+public class Person implements Serializable{
     String name = "Vova";
     double age = 13;
 

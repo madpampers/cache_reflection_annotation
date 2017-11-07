@@ -1,26 +1,22 @@
-package ru.edhunter.cache_implementation.cacheUtils;
+package ru.edhunter.cache_implementation.cache_utils;
 
 /**
  * Class BasicCipher provides XOR encryption/decryption of cache.
  */
 class BasicCipher {
-    private static final String KEY;
-
-    static {
-        KEY = CacheManager.getKey();
-    }
 
     /**
      * Encodes byte array with cached data.
      *
      * @param toEncode byte array with data.
+     * @param key      key for encoding.
      */
-    static byte[] encode(byte[] toEncode) {
-        byte[] key = KEY.getBytes();
+    static byte[] encode(byte[] toEncode, String key) {
+        byte[] keyArray = key.getBytes();
         byte[] result = new byte[toEncode.length];
 
         for (int i = 0; i < toEncode.length; i++) {
-            result[i] = (byte) (toEncode[i] ^ key[i % key.length]);
+            result[i] = (byte) (toEncode[i] ^ keyArray[i % keyArray.length]);
         }
 
         return result;
@@ -30,13 +26,14 @@ class BasicCipher {
      * Decodes byte array with cached data.
      *
      * @param toDecode byte array with data.
+     * @param key      key for decoding.
      */
-    static byte[] decode(byte[] toDecode) {
+    static byte[] decode(byte[] toDecode, String key) {
         byte[] result = new byte[toDecode.length];
-        byte[] key = KEY.getBytes();
+        byte[] keyArray = key.getBytes();
 
         for (int i = 0; i < toDecode.length; i++) {
-            result[i] = (byte) (toDecode[i] ^ key[i % key.length]);
+            result[i] = (byte) (toDecode[i] ^ keyArray[i % keyArray.length]);
         }
 
         return result;

@@ -1,66 +1,80 @@
 package ru.edhunter.cache_implementation.caches;
 
 
-import ru.edhunter.cache_implementation.cacheUtils.CacheManager;
-import ru.edhunter.cache_implementation.cacheUtils.FileCacheReader;
-import ru.edhunter.cache_implementation.cacheUtils.FileCacheWriter;
-import ru.edhunter.cache_implementation.interfaces.ICache;
+import ru.edhunter.cache_implementation.cache_utils.FileCacheReaderWriter;
+import ru.edhunter.cache_implementation.interfaces.CacheInterface;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.UUID;
+import java.util.List;
 
 /**
  * Off-heap implementation of ICache interface. Uses HashMap for storing uuid and offset of stored cached items in file.
+ * After VM shutdown, all cache-files deleted
  */
-public class FileCache implements ICache {
-    private HashMap<UUID, Long> cached = new HashMap<>();
-    private File file;
+public class FileCache implements CacheInterface {
+    final private HashMap<List, Long> cached = new HashMap<>();
+    final private File file;
+    final private boolean encrypt;
+    final private String key;
+    final private boolean zip;
 
     /**
-     * Contructor
+     * Constructor
      * All cache files deletes on JVM terminates
      *
      * @param fileName name, with which cache stored on disk, sets file extension as .zip, if file compressed
+     * @param zip      true if compressing enabled
+     * @param encrypt  true if encrypting of cache enabled
+     * @param cacheDir directory, where cache saved
+     * @param key      encoding/decoding key
      */
 
-    public FileCache(String fileName) {
-        StringBuilder filePath = new StringBuilder(CacheManager.getDir() + "\\" + fileName);
-        if (CacheManager.isZip()) {
+    public FileCache(String fileName, boolean zip, boolean encrypt, String cacheDir, String key) {
+        StringBuilder filePath = new StringBuilder(cacheDir + "\\" + fileName);
+        if (zip) {
             filePath.append(".zip");
         }
         file = new File(filePath.toString());
         file.deleteOnExit();
+        this.encrypt = encrypt;
+        this.key = key;
+        this.zip = zip;
     }
 
     /**
-     * @see ICache#putData(UUID, Object)
+     * @see CacheInterface#putData(List, Object)
      */
     @Override
-    public void putData(final UUID identity, Object returnValue) {
-        long offset;
-        offset = FileCacheWriter.write(returnValue, file);
-        cached.put(identity, offset);
+    public void putData(List identity, Object returnValue) {
+        synchronized (FileCacheReaderWriter.class) {
+            FileCacheReaderWriter fileCacheReaderWriter = new FileCacheReaderWriter();
+            final long offset = fileCacheReaderWriter.write(returnValue, file, encrypt, key, zip);
+            cached.put(identity, offset);
+        }
     }
 
     /**
-     * @see ICache#getData(UUID)
+     * @see CacheInterface#getData(List)
      */
     @Override
-    public Object getData(final UUID identity) {
-        return FileCacheReader.read(cached.get(identity), file);
+    public Object getData(List identity) {
+        synchronized (FileCacheReaderWriter.class) {
+            FileCacheReaderWriter fileCacheReaderWriter = new FileCacheReaderWriter();
+            return fileCacheReaderWriter.read(cached.get(identity), file, encrypt, key, zip);
+        }
     }
 
     /**
-     * @see ICache#contains(UUID)
+     * @see CacheInterface#contains(List)
      */
     @Override
-    public boolean contains(final UUID identity) {
+    public boolean contains(List identity) {
         return cached.containsKey(identity);
     }
 
     /**
-     * @see ICache#getSize()
+     * @see CacheInterface#getSize()
      */
     @Override
     public int getSize() {

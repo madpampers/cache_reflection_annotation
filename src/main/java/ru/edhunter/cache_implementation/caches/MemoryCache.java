@@ -1,35 +1,44 @@
 package ru.edhunter.cache_implementation.caches;
 
-import ru.edhunter.cache_implementation.interfaces.ICache;
+import ru.edhunter.cache_implementation.interfaces.CacheInterface;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * RAM implementation of ICache interface. Uses HashMap for storing uuid and cached value.
  */
-public class MemoryCache implements ICache {
-    private Map<UUID, Object> cache = new HashMap<>();
+public class MemoryCache implements CacheInterface {
+    private ConcurrentMap<List, Object> cache = new ConcurrentHashMap<>();
 
-    /**@see ICache#putData(UUID, Object) */
+    /**
+     * @see CacheInterface#putData(List, Object)
+     */
     @Override
-    public void putData(final UUID identity, final Object returnValue) {
+    public void putData(List identity, final Object returnValue) {
         cache.put(identity, returnValue);
     }
-    /**@see ICache#getData(UUID) */
+
+    /**
+     * @see CacheInterface#getData(List)
+     */
     @Override
-    public Object getData(final UUID identity) {
+    public Object getData(List identity) {
         return cache.get(identity);
     }
 
-    /**@see ICache#contains(UUID) */
+    /**
+     * @see CacheInterface#contains(List)
+     */
     @Override
-    public boolean contains(final UUID identity) {
+    public boolean contains(List identity) {
         return cache.containsKey(identity);
     }
 
-    /**@see ICache#getSize() */
+    /**
+     * @see CacheInterface#getSize()
+     */
     @Override
     public int getSize() {
         return cache.size();

@@ -1,4 +1,4 @@
-package ru.edhunter.cache_implementation.cacheUtils;
+package ru.edhunter.cache_implementation.cache_utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
